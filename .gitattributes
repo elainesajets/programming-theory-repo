@@ -14,4 +14,4 @@
 *.xml linguist-detectable=false
 *.txt linguist-detectable=false
 *.md linguist-detectable=false
-*.cs linguist-language=C#
+*.cs linguist-language=C#*.wlt linguist-detectable=false
