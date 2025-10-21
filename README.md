@@ -31,3 +31,7 @@ Apply and demonstrate the four fundamental OOP concepts in Unity:
 
 - **Unity Version:** 6.0 LTS (6000.0.60f1)
 - **Render Pipeline:** Universal Render Pipeline (URP)
+
+## 🤍 Credits
+
+- [Garden cozy kit UI/GUI buttons and icons](https://mandinhart.itch.io/garden-cozy-kit-uigui-buttons-and-icons) by **Mandinhart**
