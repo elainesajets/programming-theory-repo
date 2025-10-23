@@ -1,7 +1,6 @@
 
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Scripting.APIUpdating;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class Player : MonoBehaviour
