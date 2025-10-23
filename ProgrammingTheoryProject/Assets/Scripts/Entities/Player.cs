@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Scripting.APIUpdating;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class Player : MonoBehaviour
@@ -25,13 +26,8 @@ public class Player : MonoBehaviour
                 m_Agent.destination = m_HitInfo.point;
         }
 
-        if (m_Agent.velocity.magnitude != 0f)
-        {
-            m_Animator.SetBool("Walking", true);
-        }
-        else
-        {
-            m_Animator.SetBool("Walking", false);
-        }
+        var moving = m_Agent.velocity.magnitude != 0f;
+        m_Animator.SetBool("Walking", moving);
+
     }
 }
