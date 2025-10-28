@@ -27,6 +27,6 @@ public class AgentAnimatorBridge : MonoBehaviour
         int state = 0; // idle
         if (s > runThreshold) state = 2;
         else if (s > walkThreshold) state = 1;
-        anim.SetInteger(stateParam, state);
+        anim.SetFloat(stateParam, (float)state);
     }
 }

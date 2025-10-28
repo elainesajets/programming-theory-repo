@@ -1,6 +1,7 @@
 // Abstraction + Inheritance
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class Animal : MonoBehaviour
@@ -14,8 +15,11 @@ public abstract class Animal : MonoBehaviour
     [SerializeField] private Vector2 idleTimeRange = new Vector2(1.0f, 3.0f);
     [SerializeField] private float repathCheckInterval = 0.25f;
 
+    //[SerializeField] public GameObject infoPanel;
+
     private NavMeshAgent _agent;
     private Coroutine _wanderRoutine;
+    //TODO Add audio files for each animal
     // [SerializeField] protected AudioSource audioSource;
     // [SerializeField] protected AudioClip soundClip;
 
@@ -26,7 +30,41 @@ public abstract class Animal : MonoBehaviour
     protected virtual void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+
+        // Randomize behavior parameters so each animal moves differently
+        wanderRadius += Random.Range(-2f, 2f);
+        idleTimeRange.x += Random.Range(-0.5f, 0.5f);
+        idleTimeRange.y += Random.Range(-0.5f, 0.5f);
+        _agent.speed += Random.Range(-0.5f, 1.0f);
+
+        if (TryGetRandomPoint(transform.position, wanderRadius, out Vector3 randomPos))
+        {
+            // Instantly move the agent to that position
+            _agent.Warp(randomPos);
+        }
+
+        LoadAllAnimals();
     }
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                return; // don't click through UI
+
+            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+            {
+                if (hit.transform == transform)
+                {
+                    OnAnimalClicked();
+                }
+            }
+        }
+    }
+
+    protected abstract void OnAnimalClicked();
 
     protected virtual void Start()
     {
@@ -93,5 +131,25 @@ public abstract class Animal : MonoBehaviour
         return false;
     }
 
+    protected void LoadAllAnimals()
+    {
+        SaveData data = SaveSystem.Load();
+        string[] types = { "cat", "dog", "chicken" };
+
+        string message = "These are the animals under your care today: ";
+
+        for (int i = 0; i < types.Length; i++)
+        {
+            var (name, _, _) = data.GetAnimalData(types[i]);
+            message += $"{name} ({types[i]})";
+
+            if (i < types.Length - 1)
+                message += ", ";
+            else
+                message += ".";
+        }
+
+        Debug.Log($"Greetings, {data.playerName}! {message} Click them for more information.");
+    }
 
 }

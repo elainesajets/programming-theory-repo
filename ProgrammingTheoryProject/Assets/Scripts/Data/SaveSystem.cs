@@ -13,29 +13,27 @@ public static class SaveSystem
 
     public static SaveData Load()
     {
-        if (!File.Exists(PathStr)) return null;
+        if (!File.Exists(PathStr)) return new SaveData();
         return JsonUtility.FromJson<SaveData>(File.ReadAllText(PathStr));
     }
 
     public static void SaveName(string playerName)
     {
-        SaveData data = new SaveData();
+        SaveData data = Load() ?? new SaveData();
         data.playerName = playerName;
-
-        string json = JsonUtility.ToJson(data);
-        File.WriteAllText(PathStr, json);
+        Save(data);
     }
 
-    public static string LoadName()
-    {
-        if (File.Exists(PathStr))
-        {
-            string json = File.ReadAllText(PathStr);
-            SaveData data = JsonUtility.FromJson<SaveData>(json);
-            return data.playerName;
-        }
-        return "";
-    }
+    // public static string LoadName()
+    // {
+    //     if (File.Exists(PathStr))
+    //     {
+    //         string json = File.ReadAllText(PathStr);
+    //         SaveData data = JsonUtility.FromJson<SaveData>(json);
+    //         return data.playerName;
+    //     }
+    //     return "";
+    // }
 
     public static void DeleteSave()
     {

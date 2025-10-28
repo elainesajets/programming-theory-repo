@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -17,9 +16,36 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        CreateSaveFile();
+
     }
+
+    //Method for hard coded save file
+    void CreateSaveFile()
+    {
+        SaveData data = new SaveData();
+
+        data.catName = "Mochi";
+        data.catAge = 3;
+        data.catDetails = "Loves naps and knocking things off shelves.";
+
+        data.dogName = "Choco";
+        data.dogAge = 5;
+        data.dogDetails = "Always hungry.";
+
+        data.chickenName = "Birdie";
+        data.chickenAge = 7;
+        data.chickenDetails = "Dreams of flying.";
+
+        SaveSystem.Save(data);
+
+        Debug.Log("Animal data saved!");
+    }
+
     //Abstraciton
-    public void Exit() // ABSTRACTION
+    public void Exit()
     {
 #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
