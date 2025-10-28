@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class Dog : Animal
+public class Chicken : Animal
 {
     protected override void Start() { base.Start(); }
 
     protected override void MakeSound()
     {
-        Debug.Log("Woof");
+        Debug.Log("Chirp");
     }
 }
