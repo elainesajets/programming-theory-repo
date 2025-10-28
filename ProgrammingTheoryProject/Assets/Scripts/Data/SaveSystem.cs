@@ -16,4 +16,36 @@ public static class SaveSystem
         if (!File.Exists(PathStr)) return null;
         return JsonUtility.FromJson<SaveData>(File.ReadAllText(PathStr));
     }
+
+    public static void SaveName(string playerName)
+    {
+        SaveData data = new SaveData();
+        data.playerName = playerName;
+
+        string json = JsonUtility.ToJson(data);
+        File.WriteAllText(PathStr, json);
+    }
+
+    public static string LoadName()
+    {
+        if (File.Exists(PathStr))
+        {
+            string json = File.ReadAllText(PathStr);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            return data.playerName;
+        }
+        return "";
+    }
+
+    public static void DeleteSave()
+    {
+        if (File.Exists(PathStr))
+        {
+            File.Delete(PathStr);
+        }
+        else
+        {
+            Debug.LogWarning("Save file not found!");
+        }
+    }
 }

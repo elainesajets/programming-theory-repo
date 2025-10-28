@@ -13,6 +13,9 @@ public class Player : MonoBehaviour
     {
         m_Agent = GetComponent<NavMeshAgent>();
         m_Animator = GetComponent<Animator>();
+        SaveSystem.LoadName();
+        string playerName = SaveSystem.LoadName();
+        Debug.Log($"Welcome, {playerName}!");
     }
 
     void Update()

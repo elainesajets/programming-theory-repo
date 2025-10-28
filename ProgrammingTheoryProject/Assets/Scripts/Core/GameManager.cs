@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -16,8 +18,7 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
     }
-
-
+    //Abstraciton
     public void Exit() // ABSTRACTION
     {
 #if UNITY_EDITOR
