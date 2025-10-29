@@ -28,6 +28,7 @@ Apply and demonstrate the four fundamental OOP concepts in Unity:
 
 ## 💡 Future improvements
 
+- Fix info panel not toggling when clicking animals in the lower section of the screen
 - Add indicator to selected animal
 - Add and remove animals
 - Add animal sounds
