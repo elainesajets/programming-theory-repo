@@ -24,6 +24,27 @@ public static class SaveSystem
         Save(data);
     }
 
+    public static void LoadAllAnimals()
+    {
+        SaveData data = Load();
+        string[] types = { "cat", "dog", "chicken" };
+
+        string message = "These are the animals under your care today: ";
+
+        for (int i = 0; i < types.Length; i++)
+        {
+            var (name, _, _) = data.GetAnimalData(types[i]);
+            message += $"{name} ({types[i]})";
+
+            if (i < types.Length - 1)
+                message += ", ";
+            else
+                message += ".";
+        }
+
+        Debug.Log($"Greetings, {data.playerName}! {message} Click them for more information.");
+    }
+
     public static void DeleteSave()
     {
         if (File.Exists(PathStr))

@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        CreateSaveFile();
     }
 
     //Method for hard coded save file
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("TitleScreen");
     }
+
 
     public void Exit()
     {

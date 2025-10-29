@@ -1,17 +1,28 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class MainGameUIHandler : MonoBehaviour
 {
     [Header("Animal info")]
     [SerializeField] private GameObject animalInfoPanel;
     public GameObject AnimalInfo => animalInfoPanel; // Encapsulation
-    [SerializeField] private TextMeshProUGUI animalName;
-    [SerializeField] private TextMeshProUGUI animalAge;
-    [SerializeField] private TextMeshProUGUI animalDetails;
-    [SerializeField] public bool isInfoPanelActive = false;
+    [SerializeField] TextMeshProUGUI animalName;
+    [SerializeField] TextMeshProUGUI animalAge;
+    [SerializeField] TextMeshProUGUI animalDetails;
+    public Button backButton;
 
-    public static MainGameUIHandler Instance { get; private set; } // Encapsulation
+    private static MainGameUIHandler _instance;
+    public static MainGameUIHandler Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = FindFirstObjectByType<MainGameUIHandler>(FindObjectsInactive.Include);
+            return _instance;
+        }
+        private set => _instance = value;
+    }
 
     void Awake()
     {
@@ -20,49 +31,49 @@ public class MainGameUIHandler : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);  // persist across scenes
+
+        if (animalInfoPanel != null)
+            animalInfoPanel.SetActive(false);
     }
 
-    void Start()
+    void OnDestroy()
     {
-        if (animalInfoPanel != null) animalInfoPanel.SetActive(false);
-    }
-
-    void Update()
-    {
-        if (animalInfoPanel != null && animalInfoPanel.activeSelf && Input.GetMouseButtonDown(0))
-        {
-            // Ignore clicks over UI
-            if (UnityEngine.EventSystems.EventSystem.current != null &&
-                UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-                return;
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
-            {
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Animal")) return;
-                else HideInfoPanel();
-            }
-            else HideInfoPanel();
-        }
+        if (Instance == this) Instance = null;
     }
 
     void ShowInfoPanel() //Abstraction
     {
-        animalInfoPanel.SetActive(true);
-        isInfoPanelActive = true;
+        if (animalInfoPanel == null)
+        {
+            Debug.LogWarning("[UI] Info panel reference lost");
+        }
 
+        animalInfoPanel.SetActive(true);
     }
 
     void HideInfoPanel() //Abstraction
     {
+        if (animalInfoPanel == null) return;
         animalInfoPanel.SetActive(false);
-        isInfoPanelActive = false;
+    }
+
+    public void HideInfoPanelIfActive()
+    {
+        if (animalInfoPanel != null && animalInfoPanel.activeSelf)
+            HideInfoPanel();
     }
 
     void UpdateTextFields(string name, int age, string details)
     {
+        if (animalName == null || animalAge == null || animalDetails == null)
+        {
+            Debug.LogWarning("[UI] Text references missing, cannot update fields.");
+            return;
+        }
+
         animalName.text = $"{name}";
         animalAge.text = $"{age} years old";
         animalDetails.text = $"{details}";
@@ -80,10 +91,10 @@ public class MainGameUIHandler : MonoBehaviour
         }
     }
 
-    // Method overloading. This version keeps existing behavior if called without animal data
-    public void ToggleInfo()
+    public void EnableBackButton()
     {
-        if (animalInfoPanel != null && animalInfoPanel.activeSelf) HideInfoPanel();
-        else ShowInfoPanel();
+        var btn = backButton.gameObject;
+        if (btn.activeSelf) return;
+        else btn.SetActive(true);
     }
 }

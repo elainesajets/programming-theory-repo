@@ -33,7 +33,7 @@ Apply and demonstrate the four fundamental OOP concepts in Unity:
 - Add and remove animals
 - Add animal sounds
 - Make animals chase each other
-- Settings page
+- Add settings page
 
 ## 🛠 Unity Information
 

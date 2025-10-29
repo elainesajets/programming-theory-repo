@@ -13,15 +13,7 @@ public class Dog : Animal
     {
         SaveData data = SaveSystem.Load();
         var (name, age, details) = data.GetAnimalData("dog");
-        var ui = MainGameUIHandler.Instance;
-
-        if (ui == null)
-        {
-            Debug.LogError("UI handler Instance is null");
-            return;
-        }
-
-        ui.ToggleInfo(name, age, details);
+        MainGameUIHandler.Instance.ToggleInfo(name, age, details);
     }
 
 }

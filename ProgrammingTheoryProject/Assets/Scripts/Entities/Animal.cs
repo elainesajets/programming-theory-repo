@@ -6,9 +6,6 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class Animal : MonoBehaviour
 {
-    //Encapsulation
-    private string _name;
-    protected string Name => _name;
 
     [Header("Wander settings")]
     [SerializeField] private float wanderRadius = 8f;
@@ -40,28 +37,34 @@ public abstract class Animal : MonoBehaviour
             // Instantly move the agent to that position
             _agent.Warp(randomPos);
         }
-
-        GameManager.Instance.CreateSaveFile();
-        LoadAllAnimals();
     }
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!Input.GetMouseButtonDown(0))
+            return;
+
+        // Don’t click through UI
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        // Try to hit an Animal first
+        int animalMask = LayerMask.GetMask("Animal");
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, animalMask))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-                return; // don't click through UI
-
-            int animalLayer = LayerMask.GetMask("Animal");
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, animalLayer))
+            var animal = hit.collider.GetComponentInParent<Animal>();
+            if (animal != null)
             {
-                var animal = hit.collider.GetComponentInParent<Animal>();
                 Debug.Log($"Hit: {hit.collider.name} (layer {LayerMask.LayerToName(hit.collider.gameObject.layer)})");
-                if (animal != null)
-                    animal.OnAnimalClicked();
+                animal.OnAnimalClicked();
             }
+            return;
         }
+
+        // Clicked somewhere that is NOT an animal (or hit nothing): hide the panel
+        var mainGameUIHandler = MainGameUIHandler.Instance;
+        if (mainGameUIHandler != null) mainGameUIHandler.HideInfoPanelIfActive();
     }
 
     protected abstract void OnAnimalClicked(); //Polymorphism
@@ -131,25 +134,6 @@ public abstract class Animal : MonoBehaviour
         return false;
     }
 
-    protected void LoadAllAnimals()
-    {
-        SaveData data = SaveSystem.Load();
-        string[] types = { "cat", "dog", "chicken" };
 
-        string message = "These are the animals under your care today: ";
-
-        for (int i = 0; i < types.Length; i++)
-        {
-            var (name, _, _) = data.GetAnimalData(types[i]);
-            message += $"{name} ({types[i]})";
-
-            if (i < types.Length - 1)
-                message += ", ";
-            else
-                message += ".";
-        }
-
-        Debug.Log($"Greetings, {data.playerName}! {message} Click them for more information.");
-    }
 
 }

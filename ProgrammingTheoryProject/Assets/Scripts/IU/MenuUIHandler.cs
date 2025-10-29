@@ -10,8 +10,9 @@ public class MenuUIHandler : MonoBehaviour
     {
         string playerName = nameInput.text;
         SaveSystem.SaveName(playerName);
-        SceneManager.LoadScene("MainGame");
-
+        SceneManager.LoadScene("MainGame", LoadSceneMode.Single);
+        MainGameUIHandler.Instance.EnableBackButton();
+        SaveSystem.LoadAllAnimals();
     }
 
     public void OnExitClick()
