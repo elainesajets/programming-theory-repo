@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -42,6 +44,11 @@ public class GameManager : MonoBehaviour
         SaveSystem.Save(data);
 
         Debug.Log("Animal data saved!");
+    }
+
+    public void BackToTitle()
+    {
+        SceneManager.LoadScene("TitleScreen");
     }
 
     //Abstraciton
