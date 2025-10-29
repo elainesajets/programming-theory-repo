@@ -27,6 +27,12 @@ Apply and demonstrate the four fundamental OOP concepts in Unity:
 
 ---
 
+## 💡 Future improvements
+
+- Add and remove animals
+- Add animal sounds
+- Make animals chase each other
+
 ## 🛠 Unity Information
 
 - **Unity Version:** 6.0 LTS (6000.0.60f1)
@@ -35,3 +41,6 @@ Apply and demonstrate the four fundamental OOP concepts in Unity:
 ## 🤍 Credits
 
 - [Garden cozy kit UI/GUI buttons and icons](https://mandinhart.itch.io/garden-cozy-kit-uigui-buttons-and-icons) by **Mandinhart**
+- [Animals FREE - Animated Low Poly 3D Models](https://assetstore.unity.com/packages/3d/characters/animals/animals-free-animated-low-poly-3d-models-260727) by **ithappy**
+- [Cozy Interiors: Demo Pack](https://assetstore.unity.com/packages/2d/textures-materials/building/cozy-interiors-demo-pack-322192) by **Shaded Spectrum**
+- [Stylized House Interior](https://assetstore.unity.com/packages/3d/environments/stylized-house-interior-224331) by **StylArts**
