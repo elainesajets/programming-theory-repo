@@ -5,13 +5,13 @@ public class MainGameUIHandler : MonoBehaviour
 {
     [Header("Animal info")]
     [SerializeField] private GameObject animalInfoPanel;
-    public GameObject AnimalInfo => animalInfoPanel;
+    public GameObject AnimalInfo => animalInfoPanel; // Encapsulation
     [SerializeField] private TextMeshProUGUI animalName;
     [SerializeField] private TextMeshProUGUI animalAge;
     [SerializeField] private TextMeshProUGUI animalDetails;
     [SerializeField] public bool isInfoPanelActive = false;
 
-    public static MainGameUIHandler Instance { get; private set; } // ENCAPSULATION: Available to read, but only the manager can assign itself
+    public static MainGameUIHandler Instance { get; private set; } // Encapsulation
 
     void Awake()
     {
@@ -24,12 +24,13 @@ public class MainGameUIHandler : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start() => animalInfoPanel?.SetActive(false);
-
+    void Start()
+    {
+        if (animalInfoPanel != null) animalInfoPanel.SetActive(false);
+    }
 
     void Update()
     {
-        // Only check for clicks if the panel is active
         if (animalInfoPanel != null && animalInfoPanel.activeSelf && Input.GetMouseButtonDown(0))
         {
             // Ignore clicks over UI
@@ -40,28 +41,27 @@ public class MainGameUIHandler : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
             {
-                // If the hit object has no Animal component, hide the panel
-                if (hit.collider.GetComponentInParent<Animal>() == null)
-                    HideInfoPanel();
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Animal")) return;
+                else HideInfoPanel();
             }
-            else
-            {
-                // Clicked empty space
-                HideInfoPanel();
-            }
+            else HideInfoPanel();
         }
     }
 
-    public void HideInfoPanel()
+    void ShowInfoPanel() //Abstraction
     {
-        if (animalInfoPanel != null && animalInfoPanel.activeSelf)
-        {
-            animalInfoPanel.SetActive(false);
-            isInfoPanelActive = false;
-        }
+        animalInfoPanel.SetActive(true);
+        isInfoPanelActive = true;
+
     }
 
-    public void UpdateTextFields(string name, int age, string details)
+    void HideInfoPanel() //Abstraction
+    {
+        animalInfoPanel.SetActive(false);
+        isInfoPanelActive = false;
+    }
+
+    void UpdateTextFields(string name, int age, string details)
     {
         animalName.text = $"{name}";
         animalAge.text = $"{age} years old";
@@ -72,32 +72,18 @@ public class MainGameUIHandler : MonoBehaviour
     {
         // If panel is open and already showing this animal's data, close it
         if (animalInfoPanel != null && animalInfoPanel.activeSelf &&
-            animalName.text == name)
-        {
-            animalInfoPanel.SetActive(false);
-            isInfoPanelActive = false;
-        }
+            animalName.text == name) HideInfoPanel();
         else
         {
             UpdateTextFields(name, age, details);
-            animalInfoPanel.SetActive(true);
-            isInfoPanelActive = true;
+            ShowInfoPanel();
         }
     }
 
-    // This version keeps existing behavior if called without animal data
+    // Method overloading. This version keeps existing behavior if called without animal data
     public void ToggleInfo()
     {
-        if (animalInfoPanel != null && animalInfoPanel.activeSelf)
-        {
-            animalInfoPanel.SetActive(false);
-            isInfoPanelActive = false;
-        }
-        else
-        {
-            animalInfoPanel.SetActive(true);
-            isInfoPanelActive = true;
-
-        }
+        if (animalInfoPanel != null && animalInfoPanel.activeSelf) HideInfoPanel();
+        else ShowInfoPanel();
     }
 }

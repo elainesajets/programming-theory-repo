@@ -24,17 +24,6 @@ public static class SaveSystem
         Save(data);
     }
 
-    // public static string LoadName()
-    // {
-    //     if (File.Exists(PathStr))
-    //     {
-    //         string json = File.ReadAllText(PathStr);
-    //         SaveData data = JsonUtility.FromJson<SaveData>(json);
-    //         return data.playerName;
-    //     }
-    //     return "";
-    // }
-
     public static void DeleteSave()
     {
         if (File.Exists(PathStr))

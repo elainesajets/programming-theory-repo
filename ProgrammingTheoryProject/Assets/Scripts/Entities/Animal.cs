@@ -15,8 +15,6 @@ public abstract class Animal : MonoBehaviour
     [SerializeField] private Vector2 idleTimeRange = new Vector2(1.0f, 3.0f);
     [SerializeField] private float repathCheckInterval = 0.25f;
 
-    //[SerializeField] public GameObject infoPanel;
-
     private NavMeshAgent _agent;
     private Coroutine _wanderRoutine;
     //TODO Add audio files for each animal
@@ -43,6 +41,7 @@ public abstract class Animal : MonoBehaviour
             _agent.Warp(randomPos);
         }
 
+        GameManager.Instance.CreateSaveFile();
         LoadAllAnimals();
     }
     private void Update()
@@ -54,17 +53,18 @@ public abstract class Animal : MonoBehaviour
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
                 return; // don't click through UI
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+            int animalLayer = LayerMask.GetMask("Animal");
+            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, animalLayer))
             {
-                if (hit.transform == transform)
-                {
-                    OnAnimalClicked();
-                }
+                var animal = hit.collider.GetComponentInParent<Animal>();
+                Debug.Log($"Hit: {hit.collider.name} (layer {LayerMask.LayerToName(hit.collider.gameObject.layer)})");
+                if (animal != null)
+                    animal.OnAnimalClicked();
             }
         }
     }
 
-    protected abstract void OnAnimalClicked();
+    protected abstract void OnAnimalClicked(); //Polymorphism
 
     protected virtual void Start()
     {
@@ -120,7 +120,7 @@ public abstract class Animal : MonoBehaviour
         for (int i = 0; i < 20; i++)
         {
             Vector3 random = center + Random.insideUnitSphere * radius;
-            random.y = center.y; // keep level with current plane
+            random.y = center.y;
             if (NavMesh.SamplePosition(random, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
             {
                 result = hit.position;

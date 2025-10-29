@@ -8,7 +8,7 @@ using UnityEditor;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; } // ENCAPSULATION: Available to read, but only the manager can assign itself
+    public static GameManager Instance { get; private set; } // Enca
 
     void Awake()
     {
@@ -19,13 +19,10 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        CreateSaveFile();
-
     }
 
     //Method for hard coded save file
-    void CreateSaveFile()
+    public void CreateSaveFile()
     {
         SaveData data = new SaveData();
 
@@ -51,7 +48,6 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("TitleScreen");
     }
 
-    //Abstraciton
     public void Exit()
     {
 #if UNITY_EDITOR

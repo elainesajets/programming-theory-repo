@@ -13,7 +13,14 @@ public class Chicken : Animal
     {
         SaveData data = SaveSystem.Load();
         var (name, age, details) = data.GetAnimalData("chicken");
+        var ui = MainGameUIHandler.Instance;
 
-        MainGameUIHandler.Instance.ToggleInfo(name, age, details);
+        if (ui == null)
+        {
+            Debug.LogError("UI handler Instance is null");
+            return;
+        }
+
+        ui.ToggleInfo(name, age, details);
     }
 }

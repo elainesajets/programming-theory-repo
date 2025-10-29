@@ -2,7 +2,6 @@
 public class SaveData
 {
     public string playerName;
-    // public string[] animalsInCare;
 
     public string catName;
     public int catAge;
@@ -19,12 +18,12 @@ public class SaveData
     //TODO change below method to serializable list
     public (string name, int age, string details) GetAnimalData(string type)
     {
-        switch (type.ToLower())
+        return type.ToLower() switch
         {
-            case "cat": return (catName, catAge, catDetails);
-            case "dog": return (dogName, dogAge, dogDetails);
-            case "chicken": return (chickenName, chickenAge, chickenDetails);
-            default: return ("Unknown", 0, "No data");
-        }
+            "cat" => (catName, catAge, catDetails),
+            "dog" => (dogName, dogAge, dogDetails),
+            "chicken" => (chickenName, chickenAge, chickenDetails),
+            _ => ("Unknown", 0, "No data"),
+        };
     }
 }
